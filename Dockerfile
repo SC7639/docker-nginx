@@ -6,8 +6,10 @@ RUN echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/a
 RUN apt-get update && apt-get install nginx -y
 
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
-RUN sed -e 's/.*sendfile on/sendfile off/' -i /etc/nginx/nginx.conf
+RUN sed -e 's/.*sendfile.*on/sendfile off/' -i /etc/nginx/nginx.conf
 RUN sed -e 's/.*include \/etc\/nginx\/conf.d\/\*.conf;/    include \/etc\/nginx\/conf.d\/\*.conf;\n    include \/etc\/nginx\/sites-enabled\/\*;/' -i /etc/nginx/nginx.conf
+RUN sed -e 's/.*\#gzip  on;/gzip  on;/' -i /etc/nginx/nginx.conf
+# RUN sed -e 's/.*\keepalive_timeout.*/    keepalive_timeout  0;/' -i /etc/nginx/nginx.conf
 
 ADD docker.localhost.conf /etc/nginx/sites-available/docker.localhost
 RUN mkdir /etc/nginx/sites-enabled && ln -s /etc/nginx/sites-available/docker.localhost /etc/nginx/sites-enabled/ # make symlink for arc to enable the site
